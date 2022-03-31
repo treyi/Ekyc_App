@@ -1,5 +1,5 @@
-from Azure_OCR import *
-from St_NER import *
+# from Azure_OCR import *
+# from St_NER import *
 import re
 
 
