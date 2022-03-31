@@ -19,7 +19,7 @@ class Extract_Aadhar_Data():
             if(re.search(p, text_tag[i])):
                 x=re.sub(p,'',text_tag[i])
                 text_tag[i]=x
-        print('====AADHAR TEXT ===== ', text_tag)
+        print('====Preprocessed text ===== ', text_tag)
         return text_tag
     
     
@@ -27,32 +27,39 @@ class Extract_Aadhar_Data():
         """
             Extracts gender data from text tag
         """
-        gender_m='male'
-        gender_f='female'
-        ind = [i for i in range(len(text_tag)) if (text_tag[i].lower().strip() == gender_m.lower().strip()) | (text_tag[i].lower().strip() == gender_f.lower().strip())]
+        ind = [i for i in range(len(text_tag)) if (text_tag[i].lower().strip() == 'male') | (text_tag[i].lower().strip() == 'female' )]
+        gender=""
         if ind==[]:
-            print('yes')
+            print('ind is empty-------------------------------------')
             for i in range(len(text_tag)):
+                print('-------------------1111------------------',text_tag[i])
                 if (re.findall('Male|MALE', text_tag[i])):
-                    return 'Male'
+                    gender= 'Male'
+                    break
                 elif (re.findall('Female|FEMALE', text_tag[i])):
-                    return 'Female'
-                
+                    gender= 'Female'
+                    break
+        else:
+            gender= text_tag[ind[0]]
+        print("gender is-------------------------------",gender)
+        return gender        
             
-            print('====IND==== ', ind)
-        return text_tag[ind[0]]
+            
+        
     
     def extract_enrolment(self,text_tag):
         """
             returns enrollment number from adhaar text
         """
-        x=""
+        num=""
         reg="[0-9]{4}/[0-9]{5}/[0-9]{5}"
         p = re.compile(reg)
         for i in range(len(text_tag)):
             if(re.search(p, text_tag[i])): 
-                x=re.findall(p,text_tag[i])    
-        return x
+                x=re.findall(p,text_tag[i])
+                if x:
+                    num=x[0]
+        return num
     
     def find_father(self,text_tag,name,is_long):
         """
@@ -142,42 +149,49 @@ class Extract_Aadhar_Data():
             return address_str
 
 
-
-
-    
-    def match_pattern_aadhar(self,typ,text):   #matching for aadhar card
+    def find_aadhar_number(self,text):
         """
-            match aadhaar id or dob based on regex pattern
+            match aadhaar id based on regex pattern
         """
-        try:
-            Aadhar_regex = "[2-9]{1}[0-9]{3}\\s[0-9]{4}\\s[0-9]{4}"
-            DOB_regex ="[0-9]{2}[-/.][0-9]{2}[-/.][0-9]{4}" #"\d{2}\/\d{2}\/\d{4}"
-            
-            num_of_digits = 10 if typ == "DOB" else 14
-            regx= DOB_regex if typ == "DOB" else Aadhar_regex
-            
-            matched_pattern=""
-            
-            for element in text:     
-                if typ == "DOB" and len(element) >= num_of_digits:
-                    if (re.search('Year of Birth|YoB', element)):
-                        match = re.match(r'.*([1-3][0-9]{3})', element)
-                        if match is not None:
-                            matched_pattern= match.group(1)
-                            return matched_pattern    
-                    
-            for i in range(len(text)):
-                if(re.search('DOB|Year of Birth|YoB', text[i])): 
-                    start_ind=i
-                    for i in range(start_ind,len(text)):
-                        z = re.findall(regx, text[i])
-                        if z:
-                            matched_pattern= z[0]
-                            return matched_pattern
-            return matched_pattern
-        except Exception as e:
-            print("Exception in match_pattern_aadhaar",str(e))
-            return None
+        Aadhar_regex = "[2-9]{1}[0-9]{3}\\s[0-9]{4}\\s[0-9]{4}"
+        aadhaar_number=""
+        min_aadhar_length=12
+        for element in text:
+            if len(element) >= min_aadhar_length:
+                match = re.findall(Aadhar_regex, element)
+                if match:
+                    aadhaar_number= match[0]
+        return aadhaar_number                  
+
+    def find_birthday(self,text):
+        """
+            match birthday based on regex pattern
+        """
+        DOB_regex1 ="[0-9]{2}[-/.][0-9]{2}[-/.][0-9]{4}" 
+        DOB_regex2 ="(?:19\d{2}|20[01][0-9]|)"
+        matched_pattern=""
+        for i in range(len(text)):
+            print('-------------------1111------------------',text[i])
+            if(re.search('DOB|Year of Birth|YoB', text[i])): 
+                print('-------------------22222------------------',text[i])
+                start_ind=i
+                for i in range(start_ind,len(text)):
+                    z = re.findall(DOB_regex1, text[i])
+                    y=re.findall(DOB_regex2, text[i])
+                    print('-------------------33333------------------',z)
+                    print('-------------------4444444------------------',y)
+                        
+                    if z:
+                        
+                        matched_pattern= z[0]
+                        break
+                    if y:
+                        t=[x for x in y if x!=""]
+                        matched_pattern= t[0]
+                        break
+
+        return matched_pattern
+
     
     def extract_name(self,text):
         """ return names from aadhaar data """
@@ -260,8 +274,8 @@ class Extract_Aadhar_Data():
             result_dict[field]=""
        
 
-        Aadhar_ID = self.match_pattern_aadhar("ID",text)
-        date_of_birth = self.match_pattern_aadhar("DOB",text)
+        Aadhar_ID = self.find_aadhar_number(text)
+        date_of_birth = self.find_birthday(text)
         
                 
         # ["Name","Aadhar ID","DoB","Gender","Enrollment No.","Father Name","Address"]

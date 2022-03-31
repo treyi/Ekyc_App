@@ -46,7 +46,7 @@ def decide_card(text_tag):
 
   drivers_license_data=extract_DrivingLicence_obj.match_pattern_drive(Driving_ID_regex,'ID',text_tag)
   print("driving-------1111----------------",drivers_license_data)
-  aadhar_data=extract_aadhar_obj.match_pattern_aadhar('ID',text_tag)
+  aadhar_data=extract_aadhar_obj.find_aadhar_number(text_tag)
   print("aadhaar-------2222----------------",aadhar_data)
   pan_data=extract_pan_obj.findPanCardNo(text_tag)
   print("pan_data-------3333----------------",pan_data)

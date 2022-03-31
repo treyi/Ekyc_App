@@ -31,19 +31,23 @@ class Extract_Pan_Data():
             Returns all names from the pan card data
         """
         reg="(^[A-Z]+\s.+\s[A-Z]+$)|(^[A-Z]+\s[A-Z]+$)"
-        p = re.compile(reg)
-        if(text_tag == None):
-            return False
         names=[]
-        for i in range(len(text_tag)):
-            if i<2:
-                continue
-            if(re.search(p, text_tag[i])):
-                x=re.findall(p,text_tag[i])
+        if(text_tag != None):
+            for i in range(2,len(text_tag)):
+                x=re.findall(reg,text_tag[i])
                 if x:
-                    names.extend(x)
+                    print("x is--------------------",x)
+                    for r in x:
+                        if type(r)==tuple and r!="":
+                            for e in r:
+                                if e!="":
+                                    names.append(e)
+                        elif type(r)==str and r!="":
+                            names.append(r)
+
+                    
         return names
-    
+
     def get_date_of_birth(self,text_tag):
         """
             Returns date of birth from pan_card data
@@ -56,7 +60,7 @@ class Extract_Pan_Data():
             for i in range(len(text_tag)):
                 if(re.search(p, text_tag[i])):
                     x=re.findall(p, text_tag[i])
-                    birth_date= x
+                    birth_date= x[0]
                     break
         return birth_date
     
