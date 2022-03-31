@@ -11,8 +11,6 @@ from get_utils.Extract_Passport_Data import *
 from azure_ocr_extract import *
 
 import streamlit as st
-from PIL import Image
-import matplotlib.pyplot as plt
 
 def header(url):
      st.markdown(f'<p style="color:#FF0000;font-size:24px;border-radius:2%;">{url}</p>', unsafe_allow_html=True)
