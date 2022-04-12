@@ -403,17 +403,5 @@ class Extract_Passport_Data():
             return {}
 
 
-    def populate_front_and_back(self,front_side_data,back_side_data):
-        front_fields= ["Surname","Name","Passport no.","DoB","Issue Date","Expiry Date","PassportType","Country code","Gender","Birth Location","Nationality","Place_Of_Issue"]
-        back_fields= ["father","mother","spouse","address","file"]
-        all_fields=["Surname","Name","Passport no.","DoB","Issue Date","Expiry Date","PassportType","Country code","Gender","Birth Location","Nationality","Place_Of_Issue","father","mother","spouse","address","file"]
-        merged_dict={}
-        print("front is----------------",front_side_data)
-        print("back is----------------",back_side_data)
-        for field in all_fields:
-            if field in front_fields:
-                merged_dict[field]=front_side_data[field] if front_side_data!={} else "" 
-            elif field in back_fields:
-                merged_dict[field]=back_side_data[field] if back_side_data!={} else "" 
-        return merged_dict
+
     

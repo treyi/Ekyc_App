@@ -1,5 +1,3 @@
-# from Azure_OCR import *
-# from St_NER import *
 import re
 
 
@@ -30,7 +28,7 @@ class Extract_Pan_Data():
             return ""
     
     
-    def find_name(self,text_tag):
+    def find_names(self,text_tag):
         """
             finds name from the given text 
             input:list of strings
