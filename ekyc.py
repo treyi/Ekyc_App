@@ -9,7 +9,6 @@ from get_utils.Extract_Driving_License import *
 from get_utils.Extract_Pan_Data import *
 from get_utils.Extract_Passport_Data import *
 from azure_ocr_extract import *
-from Data.error_handling import *
 import streamlit as st
 
 def header(url):
